@@ -1,7 +1,8 @@
 package com.proyecto.aplicacioncrudspring.entities;
 
 import org.hibernate.annotations.GenericGenerator;
-
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -18,20 +19,31 @@ public class User implements Serializable {
     private Long id;
 
     @Column
+    @NotBlank
+    @Size(min = 5, max = 10, message = "No se cumple las reglas del tamaño")
     private String firstName;
+
     @Column
+    @NotBlank
     private String lastName;
+
     @Column(unique = true)
+    @NotBlank
     private String email;
+
     @Column(unique = true)
+    @NotBlank
     private String username;
+
     @Column
+    @NotBlank
     private String password;
 
     //se omite de la base de datos
     @Transient
     private String confirmPassword;
 
+    @Size(min=1)
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name="user_roles"
             ,joinColumns=@JoinColumn(name="user_id")
