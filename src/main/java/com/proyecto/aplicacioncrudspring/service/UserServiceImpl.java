@@ -36,11 +36,47 @@ public class UserServiceImpl implements UserService{
     }
 
     private boolean checkPasswordValid(User user) throws Exception {
+        if (user.getConfirmPassword() == null || user.getConfirmPassword().isEmpty()) {
+            throw new Exception("Confirm es obligatorio");
+        }
         if (!user.getPassword().equals(user.getConfirmPassword())) {
             throw new Exception("Password y Confirm Password no son iguales");
         }
         return true;
     }
+
+    @Override
+    public User getUserById(Long id) throws Exception {
+        return userRepository.findById(id).orElseThrow(() -> new Exception("El usuario para editar no existe"));
+    }
+
+    /*
+    Primero recibe un usuario y luego queremos indicar que vamos a actualizar el usuario recibido
+    fromUser a toUser
+     */
+    @Override
+    public User updateUser(User fromUser) throws Exception {
+        User toUser = getUserById(fromUser.getId());
+        mapUser(fromUser, toUser);
+        return userRepository.save(toUser);
+    }
+
+    /**
+     * Ponemos todo menos el password
+     * @param from
+     * @param to
+     */
+    protected void mapUser(User from,User to) {
+        to.setUsername(from.getUsername());
+        to.setFirstName(from.getFirstName());
+        to.setLastName(from.getLastName());
+        to.setEmail(from.getEmail());
+        to.setRoles(from.getRoles());
+        //to.setPassword(from.getPassword());
+
+    }
+
+
 
 
 }
