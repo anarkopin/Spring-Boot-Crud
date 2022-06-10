@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User getUserById(Long id) throws Exception {
-        return userRepository.findById(id).orElseThrow(() -> new Exception("El usuario para editar no existe"));
+        return userRepository.findById(id).orElseThrow(() -> new Exception("El usuario no existe"));
     }
 
     /*
@@ -59,6 +59,12 @@ public class UserServiceImpl implements UserService{
         User toUser = getUserById(fromUser.getId());
         mapUser(fromUser, toUser);
         return userRepository.save(toUser);
+    }
+
+    @Override
+    public void deteleteUser(Long id) throws Exception {
+        User user = getUserById(id);
+        userRepository.delete(user);
     }
 
     /**
