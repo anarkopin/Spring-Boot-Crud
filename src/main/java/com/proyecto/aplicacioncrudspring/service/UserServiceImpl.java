@@ -1,10 +1,12 @@
 package com.proyecto.aplicacioncrudspring.service;
 
+import com.proyecto.aplicacioncrudspring.dto.ChangePasswordForm;
 import com.proyecto.aplicacioncrudspring.entities.User;
 import com.proyecto.aplicacioncrudspring.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
@@ -65,6 +67,25 @@ public class UserServiceImpl implements UserService{
     public void deteleteUser(Long id) throws Exception {
         User user = getUserById(id);
         userRepository.delete(user);
+    }
+
+    @Override
+    public User changePassword(ChangePasswordForm form) throws Exception {
+        User user = getUserById(form.getId());
+
+        if(!user.getPassword().equals(form.getCurrentPassword())){
+            throw new Exception ("Current Password Invalido");
+        }
+        if( user.getPassword().equals(form.getNewPassword())) {
+            throw new Exception("Nuevo password debe ser diferente al actual");
+        }
+        if ( !form.getNewPassword().equals(form.getConfirmPassword()) ){
+            throw new Exception("Nuevo password y current password no coinciden");
+        }
+
+        user.setPassword(form.getNewPassword());
+        user = userRepository.save(user);
+        return user;
     }
 
     /**

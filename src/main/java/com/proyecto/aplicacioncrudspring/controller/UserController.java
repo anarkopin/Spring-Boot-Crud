@@ -1,17 +1,21 @@
 package com.proyecto.aplicacioncrudspring.controller;
 
+import com.proyecto.aplicacioncrudspring.dto.ChangePasswordForm;
 import com.proyecto.aplicacioncrudspring.entities.User;
 import com.proyecto.aplicacioncrudspring.repository.RoleRepository;
 import com.proyecto.aplicacioncrudspring.repository.UserRepository;
 import com.proyecto.aplicacioncrudspring.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.stream.Collectors;
 
 @Controller
 public class UserController {
@@ -82,6 +86,8 @@ public class UserController {
         model.addAttribute("formTab","active");
 
         model.addAttribute("editMode", true);
+        model.addAttribute("passwordForm",new ChangePasswordForm(id));
+
         return "user-form/user-view";
     }
 
@@ -91,6 +97,7 @@ public class UserController {
             model.addAttribute("userForm", user);
             model.addAttribute("formTab","active");
             model.addAttribute("editMode", true);
+            model.addAttribute("passwordForm",new ChangePasswordForm(user.getId()));
         } else {
             try {
                 userService.updateUser(user);
@@ -103,6 +110,7 @@ public class UserController {
                 model.addAttribute("roles", roleRepository.findAll());
                 model.addAttribute("userList", userService.getAllUsers());
                 model.addAttribute("editMode", true);
+                model.addAttribute("passwordForm",new ChangePasswordForm(user.getId()));
             }
 
         }
@@ -127,7 +135,25 @@ public class UserController {
         return "user-form/user-view";
     }
 
+    @PostMapping("/edituser/changepassword")
+    public ResponseEntity postEditUserChangePassword(@Valid @RequestBody ChangePasswordForm form, Errors errors) {
+        try {
+            //If error, just return a 400 bad request, along with the error message
+            //Se meten los errores en erros para que le muestre al usuario
+            if (errors.hasErrors()) {
+                String result = errors.getAllErrors()
+                        .stream().map(x -> x.getDefaultMessage())
+                        .collect(Collectors.joining(""));
 
+                throw new Exception(result);
+            }
+            userService.changePassword(form);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+        return ResponseEntity.ok("success");
+    }
 
 
 
