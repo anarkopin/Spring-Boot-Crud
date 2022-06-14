@@ -1,5 +1,6 @@
 package com.proyecto.aplicacioncrudspring.service;
 
+import com.proyecto.aplicacioncrudspring.Exception.UserOrIdNotFound;
 import com.proyecto.aplicacioncrudspring.dto.ChangePasswordForm;
 import com.proyecto.aplicacioncrudspring.entities.User;
 
@@ -10,7 +11,7 @@ public interface UserService{
     public User createUser(User user) throws Exception;
     public User getUserById(Long id) throws Exception;
     public User updateUser(User user) throws Exception;
-    public void deteleteUser(Long id) throws Exception;
+    public void deteleteUser(Long id) throws UserOrIdNotFound;
     public User changePassword(ChangePasswordForm form) throws Exception;
     public boolean loggedUserHasRole(String role);
 
