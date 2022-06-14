@@ -12,7 +12,7 @@ public interface UserService{
     public User updateUser(User user) throws Exception;
     public void deteleteUser(Long id) throws Exception;
     public User changePassword(ChangePasswordForm form) throws Exception;
-
+    public boolean loggedUserHasRole(String role);
 
 }
 
