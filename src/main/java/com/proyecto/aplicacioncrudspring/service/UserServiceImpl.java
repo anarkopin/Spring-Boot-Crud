@@ -1,5 +1,6 @@
 package com.proyecto.aplicacioncrudspring.service;
 
+import com.proyecto.aplicacioncrudspring.Exception.UserOrIdNotFound;
 import com.proyecto.aplicacioncrudspring.dto.ChangePasswordForm;
 import com.proyecto.aplicacioncrudspring.entities.User;
 import com.proyecto.aplicacioncrudspring.repository.UserRepository;
@@ -58,8 +59,8 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User getUserById(Long id) throws Exception {
-        return userRepository.findById(id).orElseThrow(() -> new Exception("El usuario no existe"));
+    public User getUserById(Long id) throws UserOrIdNotFound {
+        return userRepository.findById(id).orElseThrow(() -> new UserOrIdNotFound("El id del usuario no existe"));
     }
 
     /*
@@ -75,7 +76,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public void deteleteUser(Long id) throws Exception {
+    public void deteleteUser(Long id) throws UserOrIdNotFound {
         User user = getUserById(id);
         userRepository.delete(user);
     }

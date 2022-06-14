@@ -1,5 +1,6 @@
 package com.proyecto.aplicacioncrudspring.controller;
 
+import com.proyecto.aplicacioncrudspring.Exception.UserOrIdNotFound;
 import com.proyecto.aplicacioncrudspring.dto.ChangePasswordForm;
 import com.proyecto.aplicacioncrudspring.entities.User;
 import com.proyecto.aplicacioncrudspring.repository.RoleRepository;
@@ -128,7 +129,7 @@ public class UserController {
     public String deleteUser(Model model, @PathVariable(name="id")Long id){
         try {
             userService.deteleteUser(id);
-        } catch (Exception e) {
+        } catch (UserOrIdNotFound e) {
             model.addAttribute("listErrorMessage", e.getMessage()); //Asi mandamos el error al front
 
         }
