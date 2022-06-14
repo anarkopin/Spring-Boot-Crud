@@ -30,7 +30,7 @@ public class UserController {
     UserService userService;
 
 
-    @GetMapping("/")
+    @GetMapping({"/","/login"})
     public String index(){
         return "index";
     }
